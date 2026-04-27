@@ -110,41 +110,107 @@ const App = () => {
   ];
 
   const projects = [
+    // ═══════════════════════════════════════════
+    // DADOS — 3 Projetos
+    // ═══════════════════════════════════════════
     {
-      title: "Facebook Ads Pipeline para BigQuery",
+      title: "Pipeline Facebook Ads → BigQuery",
       category: "Dados",
-      description: "Desenvolvimento de pipeline do Facebook Ads para Gestores de Tráfego, extraindo dados das campanhas e armazenando no BigQuery para criação de dashboards analíticos.",
-      technologies: ["Python", "Pandas", "API Requests", "BigQuery"],
+      description: "Pipeline completo de ingestão de dados da API do Meta Ads para o Google BigQuery. Extrai métricas de campanhas (CTR, CPC, ROAS, conversões), normaliza os dados com Pandas e carrega em tabelas particionadas. Inclui dashboard analítico para gestores de tráfego monitorarem performance em tempo real.",
+      technologies: ["Python", "Pandas", "Meta API", "BigQuery", "Airflow"],
       images: [
-        "/images/api meta ads app.jpg",
-        "/images/api meta ads bigquery.jpg",
+        "./images/projeto-pipeline-ads.png",
       ],
       link: "https://github.com/Gabriel-Rosatto-Dantas/API-Meta-Ads"
     },
     {
-      title: "Landing Page Premium para Serviços",
-      category: "Web",
-      description: "Projeto de exemplo de Landing Page de alta conversão. Design focado em performance, micro-interações, tema escuro e estruturação otimizada para SEO.",
-      technologies: ["React", "TailwindCSS", "Framer Motion", "Vite"],
-      images: [],
-      link: "#"
-    },
-    {
-      title: "Dashboard Executivo de Vendas",
+      title: "Dashboard Executivo de Vendas em Tempo Real",
       category: "Dados",
-      description: "Sistema interativo de análise de dados projetado para monitorar KPIs em tempo real, conectando dados de múltiplas fontes em um painel consolidado.",
-      technologies: ["Power BI", "SQL", "Python", "Data Viz"],
-      images: [],
+      description: "Sistema de monitoramento de KPIs de vendas conectando múltiplas fontes de dados (ERP, CRM, e-commerce) em um painel consolidado. Exibe receita total, ticket médio, taxa de conversão e tendências por região com atualização em tempo real. Usado por equipes de diretoria para tomada de decisão estratégica.",
+      technologies: ["Power BI", "SQL", "Python", "BigQuery", "Data Viz"],
+      images: [
+        "./images/projeto-dashboard-vendas.png",
+      ],
       link: "#"
     },
     {
-      title: "Automação de Qualificação de Leads",
-      category: "Automações",
-      description: "Fluxo automatizado que recebe leads de um formulário, enriquece os dados usando APIs externas e envia para o CRM, notificando a equipe no Slack.",
-      technologies: ["Make/Zapier", "Python Scripts", "Webhooks"],
-      images: [],
+      title: "Pipeline ETL Multi-Source com Monitoramento",
+      category: "Dados",
+      description: "Arquitetura completa de ETL que ingere dados de APIs REST, bancos relacionais e arquivos CSV legados, aplica transformações com Apache Spark (validação de schema, limpeza, enriquecimento) e carrega em um Data Warehouse Snowflake. Painel de saúde do pipeline monitora latência, throughput (14K rows/s) e qualidade dos dados (99.2%).",
+      technologies: ["Python", "Spark", "Airflow", "Snowflake", "Docker"],
+      images: [
+        "./images/projeto-etl-pipeline.png",
+      ],
       link: "#"
-    }
+    },
+
+    // ═══════════════════════════════════════════
+    // WEB — 3 Projetos
+    // ═══════════════════════════════════════════
+    {
+      title: "Landing Page SaaS de Alta Conversão",
+      category: "Web",
+      description: "Landing page premium desenvolvida para uma startup de tecnologia SaaS. Inclui hero section com animações 3D, seção de features com ícones interativos, depoimentos de clientes com carrossel, tabela de preços com 3 planos e formulário de contato integrado. Otimizada para Core Web Vitals com score 98+ no Lighthouse.",
+      technologies: ["React", "TailwindCSS", "Framer Motion", "Vite", "SEO"],
+      images: [
+        "./images/projeto-landing-saas.png",
+      ],
+      link: "#"
+    },
+    {
+      title: "E-commerce Premium — Catálogo de Produtos",
+      category: "Web",
+      description: "Loja virtual completa com sistema de catálogo, filtros por categoria/preço/avaliação, carrinho de compras, sistema de busca inteligente e integração com gateway de pagamento. Design dark mode premium com cards de produto interativos, banner promocional e navegação responsiva para mobile.",
+      technologies: ["React", "Next.js", "Stripe API", "PostgreSQL", "TailwindCSS"],
+      images: [
+        "./images/projeto-ecommerce.png",
+      ],
+      link: "#"
+    },
+    {
+      title: "Site Institucional — Consultoria Empresarial",
+      category: "Web",
+      description: "Website institucional sofisticado para empresa de consultoria. Conta com seção de equipe com fotos e cargos, cards de serviços (Estratégia, Dados, Tecnologia, Crescimento), barra de logos de clientes, formulário de contato com mapa e footer completo. Design elegante com foco em credibilidade e conversão.",
+      technologies: ["React", "TailwindCSS", "Framer Motion", "Vite", "Responsivo"],
+      images: [
+        "./images/projeto-site-institucional.png",
+      ],
+      link: "#"
+    },
+
+    // ═══════════════════════════════════════════
+    // AUTOMAÇÕES — 3 Projetos
+    // ═══════════════════════════════════════════
+    {
+      title: "Bot WhatsApp — Atendimento Inteligente com IA",
+      category: "Automações",
+      description: "Chatbot empresarial para WhatsApp Business com IA conversacional. Realiza atendimento ao cliente 24/7: rastreamento de pedidos, agendamento de consultas, FAQ inteligente e transferência para atendente humano quando necessário. Painel administrativo exibe métricas de performance: 12.847 mensagens processadas, tempo de resposta de 2.3s e 96% de satisfação.",
+      technologies: ["Python", "WhatsApp API", "OpenAI", "PostgreSQL", "Docker"],
+      images: [
+        "./images/projeto-bot-whatsapp.png",
+      ],
+      link: "#"
+    },
+    {
+      title: "Bot Telegram — Monitor de Preços com IA",
+      category: "Automações",
+      description: "Bot de Telegram para monitoramento de criptomoedas e ações em tempo real com alertas inteligentes. Envia notificações personalizadas de preço, resumos de portfólio, análises de mercado geradas por IA e permite configurar alertas customizados. Dashboard de administração mostra 3.240 usuários ativos e 847 alertas disparados por dia com 99.98% de uptime.",
+      technologies: ["Python", "Telegram API", "CoinGecko API", "Redis", "LangChain"],
+      images: [
+        "./images/projeto-bot-telegram.png",
+      ],
+      link: "#"
+    },
+    {
+      title: "Automação de Qualificação de Leads (RPA)",
+      category: "Automações",
+      description: "Sistema completo de automação que captura leads de formulários web, enriquece os dados via API (clearbit, linkedin), aplica algoritmo de lead scoring, dispara sequências de emails personalizados, atualiza o CRM (HubSpot/Salesforce) e notifica a equipe no Slack. Processou 2.450 leads com taxa de conversão de 36.3%.",
+      technologies: ["Make/n8n", "Python", "Webhooks", "HubSpot API", "Slack API"],
+      images: [
+        "./images/projeto-automacao-leads.png",
+      ],
+      link: "#"
+    },
   ];
 
   const filteredProjects = activeFilter === 'Todos' 
@@ -293,10 +359,11 @@ const App = () => {
               <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-accent/20 shadow-[0_0_30px_rgba(14,165,233,0.15)] flex-shrink-0 relative group">
                 <div className="absolute inset-0 bg-accent/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 <img 
-                  src="/images/Foto Gabriel.jpg" 
+                  src="./images/foto-gabriel.jpg" 
                   alt="Gabriel Rosatto Dantas" 
                   className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
                   onError={(e) => {
+                    e.target.onerror = null;
                     e.target.src = 'https://via.placeholder.com/400x400?text=Gabriel';
                   }}
                 />
@@ -403,7 +470,7 @@ const App = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
             <AnimatePresence mode='popLayout'>
               {filteredProjects.map((project, index) => (
                 <motion.div
