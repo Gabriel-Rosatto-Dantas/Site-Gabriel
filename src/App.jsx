@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
-import { Briefcase, Code, Database, Server, Zap, Linkedin, Github, Mail, Cloud, Settings, Construction, Layers, Terminal, GitMerge, Brain, MessageSquare, MessageCircle, Instagram, X } from 'lucide-react';
+import { Code, Database, Server, Zap, Linkedin, Github, Mail, Cloud, Settings, Construction, Layers, Terminal, GitMerge, Brain, Instagram, X, Menu, Monitor, BarChart, Bot, Workflow, LineChart, Globe, Image as ImageIcon } from 'lucide-react';
 
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -36,6 +36,8 @@ const App = () => {
   const { toast } = useToast();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('Todos');
 
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
@@ -51,125 +53,68 @@ const App = () => {
     }
   };
   
-  const dataEngineeringSkills = [
+  const skills = [
     {
-      category: "Linguagens de Programação",
-      icon: <Code className="w-10 h-10 text-accent mb-4" />,
-      items: [
-        { name: "Python", description: "Sintaxe clara, vastas bibliotecas (Pandas, NumPy, PySpark) para manipulação e análise de dados." },
-        { name: "SQL", description: "Essencial para bancos de dados relacionais, otimização de queries, procedures e diversos dialetos (MySQL, PostgreSQL)." },
-      ]
-    },
-    {
-      category: "Bancos de Dados",
+      category: "Engenharia e Análise de Dados",
       icon: <Database className="w-10 h-10 text-accent mb-4" />,
       items: [
-        { name: "Relacionais (SQL)", description: "PostgreSQL" },
-        //{ name: "Relacionais (SQL)", description: "PostgreSQL, MySQL, SQL Server, Oracle." },
-        { name: "Não Relacionais (NoSQL)", description: "MongoDB" },
-        //{ name: "Não Relacionais (NoSQL)", description: "MongoDB, Cassandra, Redis, HBase." },
-        { name: "Data Warehouses", description: "Google BigQuery" }
-        //{ name: "Data Warehouses", description: "Amazon Redshift, Google BigQuery, Snowflake, Azure Synapse, Databricks Lakehouse." },
+        { name: "Python & SQL", description: "Construção de pipelines, análise de dados e extração de insights." },
+        { name: "GCP & BigQuery", description: "Data Warehousing e processamento massivo de dados na nuvem." },
+        { name: "Ferramentas de BI", description: "Power BI, Looker e Metabase para dashboards dinâmicos." },
+        { name: "Airflow & ETL", description: "Orquestração e automação de fluxos de dados corporativos." },
       ]
     },
     {
-      category: "Ferramentas de Big Data",
-      icon: <Layers className="w-10 h-10 text-accent mb-4" />,
+      category: "Desenvolvimento Web & Interfaces",
+      icon: <Monitor className="w-10 h-10 text-accent mb-4" />,
       items: [
-        { name: "Apache Hadoop", description: "Framework para processamento distribuído (HDFS, MapReduce)." },
-        { name: "Apache Spark", description: "Processamento de dados em tempo real e em lote, análise em memória." },
-        //{ name: "Apache Kafka", description: "Plataforma de streaming distribuído para eventos em tempo real." },
+        { name: "React & Next.js", description: "Criação de Single Page Applications e sistemas robustos." },
+        { name: "Tailwind CSS", description: "Estilização moderna, responsiva e de alta performance." },
+        { name: "Framer Motion", description: "Animações fluidas e micro-interações que elevam a UX." },
+        { name: "Landing Pages", description: "Páginas otimizadas para conversão e alta performance (Core Web Vitals)." },
       ]
     },
     {
-      category: "ETL e Orquestração de Dados",
-      icon: <Settings className="w-10 h-10 text-accent mb-4" />,
+      category: "Automações e DevOps",
+      icon: <Bot className="w-10 h-10 text-accent mb-4" />,
       items: [
-        { name: "Apache Airflow", description: "Gerenciamento de fluxo de trabalho, agendamento e monitoramento." },
-        //{ name: "Prefect/Dagster", description: "Alternativas ao Airflow com recursos avançados." },
-        //{ name: "Apache NiFi", description: "Automação de fluxos de dados entre sistemas." },
-        //{ name: "Talend, Informatica, Fivetran, Airbyte", description: "Ferramentas de ingestão e transformação de dados." },
-        //{ name: "dbt (data build tool)", description: "Transformação de dados com foco em colaboração e versionamento." },
-      ]
-    },
-    {
-      category: "Plataformas de Nuvem",
-      icon: <Cloud className="w-10 h-10 text-accent mb-4" />,
-      items: [
-        //{ name: "AWS", description: "S3, EC2, RDS, DynamoDB, Redshift, EMR, Kinesis, Glue." },
-        { name: "Google Cloud Platform (GCP)", description: "Cloud Storage, Compute Engine, BigQuery, Cloud SQL, Dataproc, Pub/Sub, Dataflow." },
-        //{ name: "Microsoft Azure", description: "Data Lake Storage, VMs, SQL Database, Cosmos DB, Synapse Analytics, Databricks, Event Hubs, Data Factory." },
-      ]
-    },
-    {
-      category: "Modelagem de Dados",
-      icon: <Construction className="w-10 h-10 text-accent mb-4" />,
-      items: [
-        { name: "Modelagem Dimensional", description: "Design e otimização para data warehouses (esquemas estrela e floco de neve)." },
-      ]
-    },
-    {
-      category: "DevOps e Automação",
-      icon: <GitMerge className="w-10 h-10 text-accent mb-4" />,
-      items: [
-        { name: "Infraestrutura como Código (IaC)", description: "Terraform, CloudFormation." },
-        { name: "Controle de Versão", description: "Git para colaboração e gerenciamento de código." },
-        { name: "Containers e Orquestração", description: "Docker" },
-        //{ name: "Containers e Orquestração", description: "Docker, Kubernetes." },
-        { name: "CI/CD", description: "Automação de testes e implantações de pipelines de dados." },
-      ]
-    },
-    {
-      category: "Conhecimentos Complementares",
-      icon: <Brain className="w-10 h-10 text-accent mb-4" />,
-      items: [
-        { name: "Linux/Unix", description: "Base para muitas tecnologias de Big Data e serviços de nuvem." },
-        { name: "Segurança de Dados", description: "Práticas de segurança, criptografia e governança." },
-        { name: "Qualidade de Dados", description: "Métodos para garantir integridade e precisão." },
-        { name: "Monitoramento e Log", description: "Ferramentas para acompanhar desempenho." },
+        { name: "Make / Zapier", description: "Integrações low-code entre múltiplos sistemas e APIs." },
+        { name: "Scripts Python", description: "Automação de rotinas manuais, web scraping e bots." },
+        { name: "Docker", description: "Containerização de aplicações para ambientes padronizados." },
+        { name: "Git & CI/CD", description: "Versionamento seguro e deploy automatizado (GitHub Actions)." },
       ]
     }
   ];
 
-
   const services = [
     { 
-      name: "Criação de Sistemas de Integração de Dados", 
-      icon: <Code className="w-6 h-6 mr-3 text-primary" />,
-      description: "Desenvolvo sistemas que permitem que diferentes partes da sua empresa compartilhem informações de forma segura e eficiente, como se fosse uma ponte digital entre seus departamentos."
+      name: "Engenharia de Dados & Pipelines", 
+      icon: <Server className="w-6 h-6 mr-3 text-accent" />,
+      description: "Construção de Data Lakes e Warehouses modernos, integrando APIs e bancos de dados para centralizar as informações da sua empresa de forma segura e escalável."
     },
     { 
-      name: "Organização e Estruturação de Dados", 
-      icon: <Server className="w-6 h-6 mr-3 text-primary" />,
-      description: "Ajudo a organizar suas informações de forma estruturada, como se fosse uma biblioteca digital, onde cada dado tem seu lugar certo e pode ser encontrado facilmente."
+      name: "Análise de Dados & BI", 
+      icon: <BarChart className="w-6 h-6 mr-3 text-accent" />,
+      description: "Transformo seus dados em relatórios visuais interativos (Dashboards), facilitando a tomada de decisão estratégica com base em métricas reais."
     },
     { 
-      name: "Otimização de Bancos de Dados", 
-      icon: <Database className="w-6 h-6 mr-3 text-primary" />,
-      description: "Melhoro a performance dos seus sistemas de armazenamento de dados, fazendo com que as informações sejam acessadas mais rapidamente, como organizar um arquivo para encontrar documentos mais facilmente."
+      name: "Criação de Sites e Landing Pages", 
+      icon: <Globe className="w-6 h-6 mr-3 text-accent" />,
+      description: "Desenvolvimento de sites modernos, incrivelmente rápidos e com design premium. Foco total na experiência do usuário e em gerar mais conversões."
     },
     { 
-      name: "Automação de Processos com Dados", 
-      icon: <Zap className="w-6 h-6 mr-3 text-primary" />,
-      description: "Crio sistemas que automatizam tarefas repetitivas com dados, como se fosse um assistente digital que trabalha 24 horas por dia, coletando e processando informações automaticamente."
-    },
-    { 
-      name: "Integração de Sistemas", 
-      icon: <Layers className="w-6 h-6 mr-3 text-primary" />,
-      description: "Conecto diferentes sistemas e fontes de dados da sua empresa, permitindo que todos trabalhem juntos de forma harmoniosa, como uma orquestra onde cada instrumento tem seu papel."
-    },
-    { 
-      name: "Soluções para Grandes Volumes de Dados", 
-      icon: <Terminal className="w-6 h-6 mr-3 text-primary" />,
-      description: "Desenvolvo sistemas capazes de lidar com grandes quantidades de informações em tempo real, como um sistema de controle de tráfego que processa milhares de dados por segundo."
+      name: "Automação de Processos (RPA)", 
+      icon: <Workflow className="w-6 h-6 mr-3 text-accent" />,
+      description: "Elimino tarefas manuais e repetitivas criando robôs e integrações que conectam seus sistemas (CRMs, planilhas, emails), poupando tempo e dinheiro."
     },
   ];
 
   const projects = [
     {
-      title: "Facebook Ads Pipeline de dados para BigQuery",
-      description: "Desenvolvimento de pipeline do Facebook Ads para Gestores de Trafego, onde o objetivo é extrair os dados das campanhas, anúncios, clientes, conversões, entre outros, e armazenar no BigQuery para análise e criação de dashboards.",
-      technologies: ["Python", "Pandas", "Requests", "Bigquery"],
+      title: "Facebook Ads Pipeline para BigQuery",
+      category: "Dados",
+      description: "Desenvolvimento de pipeline do Facebook Ads para Gestores de Tráfego, extraindo dados das campanhas e armazenando no BigQuery para criação de dashboards analíticos.",
+      technologies: ["Python", "Pandas", "API Requests", "BigQuery"],
       images: [
         "/images/api meta ads app.jpg",
         "/images/api meta ads bigquery.jpg",
@@ -177,22 +122,34 @@ const App = () => {
       link: "https://github.com/Gabriel-Rosatto-Dantas/API-Meta-Ads"
     },
     {
-      title: "Data Warehouse Moderno",
-      description: "Implementação de data warehouse na nuvem utilizando Snowflake e dbt para transformação de dados.",
-      technologies: ["Snowflake", "dbt", "SQL", "Python"],
-      images: [
-      ],
+      title: "Landing Page Premium para Serviços",
+      category: "Web",
+      description: "Projeto de exemplo de Landing Page de alta conversão. Design focado em performance, micro-interações, tema escuro e estruturação otimizada para SEO.",
+      technologies: ["React", "TailwindCSS", "Framer Motion", "Vite"],
+      images: [],
       link: "#"
     },
     {
-      title: "Sistema de Análise de Dados",
-      description: "Sistema completo de análise de dados com dashboard interativo e relatórios automatizados.",
-      technologies: ["Python", "PostgreSQL", "Power BI", "Airflow"],
-      images: [
-      ],
+      title: "Dashboard Executivo de Vendas",
+      category: "Dados",
+      description: "Sistema interativo de análise de dados projetado para monitorar KPIs em tempo real, conectando dados de múltiplas fontes em um painel consolidado.",
+      technologies: ["Power BI", "SQL", "Python", "Data Viz"],
+      images: [],
+      link: "#"
+    },
+    {
+      title: "Automação de Qualificação de Leads",
+      category: "Automações",
+      description: "Fluxo automatizado que recebe leads de um formulário, enriquece os dados usando APIs externas e envia para o CRM, notificando a equipe no Slack.",
+      technologies: ["Make/Zapier", "Python Scripts", "Webhooks"],
+      images: [],
       link: "#"
     }
   ];
+
+  const filteredProjects = activeFilter === 'Todos' 
+    ? projects 
+    : projects.filter(p => p.category === activeFilter);
 
   const contactEmail = "dev.gabrielrosattodantas@gmail.com";
   const githubLink = "https://github.com/Gabriel-Rosatto-Dantas";
@@ -200,308 +157,368 @@ const App = () => {
   const whatsappLink = "https://wa.me/5511992019057";
   const instagramLink = "https://instagram.com/devgabdantas";
 
+  const scrollToSection = (id) => {
+    setIsMenuOpen(false);
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const navLinks = [
+    { name: 'Home', id: 'hero' },
+    { name: 'Sobre Mim', id: 'about' },
+    { name: 'Projetos', id: 'projects' },
+    { name: 'Serviços', id: 'services' },
+    { name: 'Tecnologias', id: 'technologies' },
+    { name: 'Contato', id: 'contact' },
+  ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col items-center overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground flex flex-col items-center overflow-x-hidden relative">
       <Toaster />
       
+      {/* Navbar Responsiva */}
       <motion.header 
-        className="w-full py-6 px-4 md:px-8 fixed top-0 z-50 bg-background/80 backdrop-blur-md"
+        className="w-full py-4 px-6 md:px-8 fixed top-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/5"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold gradient-text">Gabriel Rosatto Dantas - Engenheiro de Dados</h1>
-          <div className="flex gap-4">
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent hover:text-background"
-              onClick={() => {
-                const homeSection = document.getElementById('hero');
-                if (homeSection) {
-                  homeSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Home
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent hover:text-background"
-              onClick={() => {
-                const aboutSection = document.getElementById('about');
-                if (aboutSection) {
-                  aboutSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Sobre Mim
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent hover:text-background"
-              onClick={() => {
-                const projectsSection = document.getElementById('projects');
-                if (projectsSection) {
-                  projectsSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Projetos
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent hover:text-background"
-              onClick={() => {
-                const servicesSection = document.getElementById('services');
-                if (servicesSection) {
-                  servicesSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Serviços
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent hover:text-background"
-              onClick={() => {
-                const technologiesSection = document.getElementById('technologies');
-                if (technologiesSection) {
-                  technologiesSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Tecnologias
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent hover:text-background"
-              onClick={() => {
-                const contactSection = document.getElementById('contact');
-                if (contactSection) {
-                  contactSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Contato
-            </Button>
-          </div>
+          <h1 className="text-xl md:text-2xl font-bold gradient-text cursor-pointer" onClick={() => scrollToSection('hero')}>
+            Gabriel Rosatto Dantas
+          </h1>
+          
+          {/* Desktop Menu */}
+          <nav className="hidden md:flex gap-2 lg:gap-4">
+            {navLinks.map((link) => (
+              <Button 
+                key={link.id}
+                variant="ghost" 
+                className="text-muted-foreground hover:text-accent hover:bg-white/5 transition-colors"
+                onClick={() => scrollToSection(link.id)}
+              >
+                {link.name}
+              </Button>
+            ))}
+          </nav>
+
+          {/* Mobile Toggle */}
+          <button 
+            className="md:hidden text-foreground hover:text-accent p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle Menu"
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </motion.header>
 
-      <main className="container mx-auto px-4 md:px-8 pt-32 pb-16 flex-grow">
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.nav 
+            className="fixed inset-0 top-[72px] bg-background/95 backdrop-blur-lg z-40 flex flex-col items-center justify-start pt-12 gap-6 md:hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            {navLinks.map((link) => (
+              <Button 
+                key={link.id}
+                variant="ghost" 
+                className="text-xl text-foreground hover:text-accent hover:bg-white/5 w-64 h-14"
+                onClick={() => scrollToSection(link.id)}
+              >
+                {link.name}
+              </Button>
+            ))}
+          </motion.nav>
+        )}
+      </AnimatePresence>
+
+      <main className="w-full max-w-7xl px-4 md:px-8 pt-32 pb-16 flex-grow flex flex-col items-center">
+        {/* Hero Section */}
         <motion.section 
           id="hero" 
-          className="text-center py-20 md:py-32"
+          className="text-center py-20 md:py-32 w-full flex flex-col items-center"
           variants={fadeInUp}
           initial="initial"
           animate="animate"
         >
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6">
-            <span className="gradient-text">Engenharia de Dados</span> de Impacto para <span className="subtle-accent-text">Seu Negócio</span>
+          <div className="inline-block px-4 py-1.5 rounded-full border border-accent/30 bg-accent/10 text-accent text-sm font-medium mb-8">
+            Engenheiro de Dados | Desenvolvedor Web | Analista
+          </div>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-tight max-w-4xl">
+            Transformando Dados em <span className="gradient-text">Decisões</span> e Ideias em <span className="gradient-text">Soluções Digitais</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto">
-            Especialista em Python, SQL e ecossistemas de Big Data, transformando dados brutos em insights valiosos com 1 ano de experiência.
+          <p className="text-lg md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed">
+            Especialista em construir pipelines de dados robustos, automações inteligentes e interfaces web premium de alta performance.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button 
+              className="gradient-bg text-white hover:opacity-90 transition-opacity px-8 py-6 text-lg rounded-full glow-effect"
+              onClick={() => scrollToSection('contact')}
+            >
+              Vamos Conversar
+            </Button>
+            <Button 
+              variant="outline"
+              className="border-accent/50 text-accent hover:bg-accent hover:text-background transition-colors px-8 py-6 text-lg rounded-full"
+              onClick={() => scrollToSection('projects')}
+            >
+              Ver Portfólio
+            </Button>
+          </div>
         </motion.section>
 
+        {/* Sobre Mim */}
         <motion.section 
           id="about" 
-          className="py-16 md:py-24"
+          className="py-16 md:py-24 w-full"
           variants={fadeInUp}
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 gradient-text">Sobre Mim</h2>
-          <div className="max-w-4xl mx-auto">
-            <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-              <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-accent/20 shadow-lg flex-shrink-0">
+          <div className="flex items-center gap-4 mb-12">
+            <div className="h-px bg-gradient-to-r from-transparent to-accent/50 flex-1" />
+            <h2 className="text-3xl md:text-4xl font-bold text-center gradient-text">Sobre Mim</h2>
+            <div className="h-px bg-gradient-to-l from-transparent to-accent/50 flex-1" />
+          </div>
+          
+          <div className="max-w-5xl mx-auto glassmorphism-card p-8 md:p-12 rounded-2xl border border-white/5">
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-accent/20 shadow-[0_0_30px_rgba(14,165,233,0.15)] flex-shrink-0 relative group">
+                <div className="absolute inset-0 bg-accent/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 <img 
                   src="/images/Foto Gabriel.jpg" 
                   alt="Gabriel Rosatto Dantas" 
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/400x400?text=Gabriel';
+                  }}
                 />
               </div>
-              <div className="text-center md:text-left">
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Olá! Sou um Engenheiro de Dados Freelancer com 1 ano de experiência dedicados a construir e otimizar pipelines de dados robustos e escaláveis. Minha expertise centraliza-se em Python e SQL, complementada por um profundo conhecimento em tecnologias de Big Data, ETL, e plataformas de nuvem. Minha missão é ajudar empresas de tecnologia e recrutadores a extrair o máximo valor de seus dados, transformando desafios complexos em soluções data-driven eficientes e inovadoras.
+              <div className="text-center lg:text-left">
+                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6">
+                  Olá! Sou um <strong className="text-foreground font-semibold">Engenheiro de Dados e Desenvolvedor Web</strong> apaixonado por tecnologia e resolução de problemas complexos. 
+                  Minha jornada na tecnologia me permitiu construir um perfil multidisciplinar: atuo desde a ingestão e tratamento de grandes volumes de dados (Python, SQL, BigQuery) até a criação das interfaces visuais que entregam essas informações ao usuário (React, TailwindCSS).
                 </p>
+                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
+                  Minha missão é ajudar empresas a automatizar processos manuais, transformar dados brutos em insights estratégicos e construir presenças digitais impactantes através de sites e landing pages otimizadas.
+                </p>
+                
+                <div className="flex justify-center lg:justify-start space-x-6">
+                  {[
+                    { icon: Linkedin, link: linkedinLink, label: "LinkedIn" },
+                    { icon: Github, link: githubLink, label: "GitHub" },
+                    { icon: Instagram, link: instagramLink, label: "Instagram" },
+                    { icon: WhatsAppIcon, link: whatsappLink, label: "WhatsApp" }
+                  ].map((social, i) => (
+                    <motion.a 
+                      key={i}
+                      href={social.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      aria-label={social.label}
+                      whileHover={{ y: -5, scale: 1.1 }} 
+                      transition={{ type: "spring", stiffness: 300 }}
+                      className="p-3 bg-white/5 rounded-full hover:bg-white/10 transition-colors border border-white/5"
+                    >
+                      <social.icon className="w-6 h-6 text-gray-300 hover:text-accent transition-colors" />
+                    </motion.a>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="flex justify-center space-x-6">
-              <motion.div whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 300 }}>
-                <a href={linkedinLink} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                  <Linkedin className="w-8 h-8 text-gray-400 hover:text-accent transition-colors" />
-                </a>
-              </motion.div>
-              <motion.div whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 300 }}>
-                <a href={githubLink} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                  <Github className="w-8 h-8 text-gray-400 hover:text-accent transition-colors" />
-                </a>
-              </motion.div>
-              <motion.div whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 300 }}>
-                <a href={instagramLink} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                  <Instagram className="w-8 h-8 text-gray-400 hover:text-accent transition-colors" />
-                </a>
-              </motion.div>
-              <motion.div whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 300 }}>
-                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                  <WhatsAppIcon className="w-8 h-8 text-gray-400 hover:text-accent transition-colors" />
-                </a>
-              </motion.div>
             </div>
           </div>
         </motion.section>
 
+        {/* Serviços */}
         <motion.section 
-          id="projects" 
-          className="py-16 md:py-24"
+          id="services" 
+          className="py-16 md:py-24 w-full"
           variants={fadeInUp}
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 gradient-text">Projetos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <motion.div
-                key={index}
-                className="glassmorphism-card rounded-lg overflow-hidden"
-                whileHover={{ y: -10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                {...(index === 0 && { 
-                  onClick: () => console.log('Clique no Card do Projeto: ', project.title)
-                })}
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">Como Posso Ajudar Seu Negócio</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Soluções completas de ponta a ponta: do banco de dados à interface do usuário.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {services.map((service, index) => (
+              <motion.div 
+                key={index} 
+                className="glassmorphism-card p-8 rounded-2xl" 
+                custom={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.02 }} 
+                transition={{
+                  delay: index * 0.1,
+                  duration: 0.5,
+                }}
               >
-                <div className="relative">
-                  <div className="relative h-48 overflow-hidden">
-                    {project.images.map((image, imageIndex) => (
-                      <div 
-                        key={imageIndex}
-                        className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ${
-                          imageIndex === 0 ? 'opacity-100' : 'opacity-0'
-                        } cursor-pointer`}
-                        style={{
-                          animation: `fadeInOut ${project.images.length * 3}s infinite ${imageIndex * 3}s`
-                        }}
-                        onClick={() => {
-                          const flatImages = projects.flatMap(proj => proj.images);
-                          const globalIndex = flatImages.findIndex(img => img === image);
-                          console.log('Clicada imagem:', image, 'Índice Global:', globalIndex);
-                          setLightboxOpen(true);
-                          setCurrentImageIndex(globalIndex);
-                          console.log('lightboxOpen:', true, 'currentImageIndex:', globalIndex);
-                        }}
-                      >
-                        <img 
-                          src={image} 
-                          alt={`${project.title} - Imagem ${imageIndex + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
+                <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center mb-6 border border-accent/20">
+                  {service.icon}
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-accent mb-2">{project.title}</h3>
-                  <p className="text-muted-foreground mb-4">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.map((tech, techIndex) => (
-                      <span 
-                        key={techIndex}
-                        className="px-3 py-1 text-sm bg-accent/10 text-accent rounded-full"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    className="w-full border-accent text-accent hover:bg-accent hover:text-background"
-                    onClick={() => window.open(project.link, '_blank')}
-                  >
-                    Ver Projeto
-                  </Button>
-                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">{service.name}</h3>
+                <p className="text-muted-foreground leading-relaxed">{service.description}</p>
               </motion.div>
             ))}
           </div>
         </motion.section>
 
+        {/* Projetos */}
         <motion.section 
-          id="services" 
-          className="py-16 md:py-24"
+          id="projects" 
+          className="py-16 md:py-24 w-full"
           variants={fadeInUp}
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 gradient-text">Serviços Oferecidos</h2>
-          <div className="max-w-3xl mx-auto">
-            <ul className="space-y-8">
-              {services.map((service, index) => (
-                <motion.li 
-                  key={index} 
-                  className="glassmorphism-card p-6 rounded-xl" 
-                  custom={index}
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  whileHover={{ scale: 1.03 }} 
-                  transition={{
-                    delay: index * 0.1,
-                    duration: 0.5,
-                    whileHover: { type: "spring", stiffness: 400, damping: 10 }
-                  }}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 gradient-text">Projetos em Destaque</h2>
+            
+            {/* Filters */}
+            <div className="flex flex-wrap justify-center gap-2 mb-12">
+              {['Todos', 'Dados', 'Web', 'Automações'].map((filter) => (
+                <Button
+                  key={filter}
+                  variant={activeFilter === filter ? 'default' : 'outline'}
+                  className={activeFilter === filter 
+                    ? 'gradient-bg text-white border-0' 
+                    : 'border-white/10 text-muted-foreground hover:text-white'}
+                  onClick={() => setActiveFilter(filter)}
                 >
-                  <div className="flex items-start">
-                    {service.icon}
-                    <div className="ml-4">
-                      <h3 className="text-lg font-semibold text-primary mb-2">{service.name}</h3>
-                      <p className="text-muted-foreground">{service.description}</p>
+                  {filter}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <AnimatePresence mode='popLayout'>
+              {filteredProjects.map((project, index) => (
+                <motion.div
+                  key={project.title}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  className="glassmorphism-card rounded-2xl overflow-hidden group flex flex-col h-full border border-white/5"
+                >
+                  <div className="relative h-64 overflow-hidden bg-black/40">
+                    {project.images && project.images.length > 0 ? (
+                      project.images.map((image, imageIndex) => (
+                        <div 
+                          key={imageIndex}
+                          className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ${
+                            imageIndex === 0 ? 'opacity-100' : 'opacity-0'
+                          } cursor-pointer`}
+                          style={{
+                            animation: project.images.length > 1 ? `fadeInOut ${project.images.length * 3}s infinite ${imageIndex * 3}s` : 'none'
+                          }}
+                          onClick={() => {
+                            const flatImages = projects.flatMap(proj => proj.images).filter(Boolean);
+                            const globalIndex = flatImages.findIndex(img => img === image);
+                            setLightboxOpen(true);
+                            setCurrentImageIndex(globalIndex !== -1 ? globalIndex : 0);
+                          }}
+                        >
+                          <img 
+                            src={image} 
+                            alt={project.title}
+                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              if (e.target.parentElement) {
+                                e.target.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center text-muted-foreground/50 border border-white/5 bg-white/5 rounded-t-2xl">${project.title}</div>`;
+                              }
+                            }}
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground/50 bg-white/5">
+                        <div className="flex flex-col items-center gap-2">
+                          <ImageIcon className="w-12 h-12 opacity-20" />
+                          <span className="text-sm font-medium">Em Breve</span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white border border-white/10 z-20">
+                      {project.category}
                     </div>
                   </div>
-                </motion.li>
+                  <div className="p-8 flex flex-col flex-grow">
+                    <h3 className="text-2xl font-semibold text-foreground mb-3">{project.title}</h3>
+                    <p className="text-muted-foreground mb-6 flex-grow">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {project.technologies.map((tech, techIndex) => (
+                        <span 
+                          key={techIndex}
+                          className="px-3 py-1 text-xs font-medium bg-accent/10 text-accent border border-accent/20 rounded-full"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    <Button 
+                      className="w-full bg-white/5 hover:bg-white/10 text-white border border-white/10 group-hover:border-accent/50 transition-colors"
+                      onClick={() => window.open(project.link, '_blank')}
+                    >
+                      Ver Detalhes do Projeto
+                    </Button>
+                  </div>
+                </motion.div>
               ))}
-            </ul>
+            </AnimatePresence>
           </div>
         </motion.section>
 
+        {/* Tecnologias */}
         <motion.section 
           id="technologies" 
-          className="py-16 md:py-24"
+          className="py-16 md:py-24 w-full"
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
           variants={staggerContainer}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 gradient-text">Tecnologias e Ferramentas</h2>
-          {console.log('Renderizando seção de tecnologias:', dataEngineeringSkills)}
-          <div className="space-y-12">
-            {dataEngineeringSkills.map((skillCategory, categoryIndex) => (
-              <motion.div key={categoryIndex} variants={fadeInUp}>
-                <div className="flex flex-col items-center mb-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">Tecnologias & Ferramentas</h2>
+            <p className="text-muted-foreground">Um stack moderno e completo para construir soluções escaláveis.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {skills.map((skillCategory, categoryIndex) => (
+              <motion.div 
+                key={categoryIndex} 
+                variants={fadeInUp}
+                className="glassmorphism-card p-8 rounded-2xl flex flex-col items-center border border-white/5"
+              >
+                <div className="bg-white/5 p-4 rounded-2xl mb-6 border border-white/5">
                   {skillCategory.icon}
-                  <h3 className="text-2xl font-semibold text-primary">{skillCategory.category}</h3>
                 </div>
-                <div className={`grid gap-6 ${
-                  skillCategory.items.length === 1 
-                    ? 'grid-cols-1 max-w-md mx-auto' 
-                    : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-                }`}>
+                <h3 className="text-2xl font-semibold text-foreground mb-8 text-center">{skillCategory.category}</h3>
+                
+                <div className="w-full space-y-4">
                   {skillCategory.items.map((item, itemIndex) => (
-                    <motion.div 
+                    <div 
                       key={itemIndex} 
-                      className="glassmorphism-card p-6 rounded-xl text-center"
-                      variants={fadeInUp}
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      className="bg-black/20 p-4 rounded-xl border border-white/5 hover:border-accent/30 transition-colors"
                     >
-                      <h4 className="text-lg font-semibold text-accent mb-2">{item.name}</h4>
-                      <p className="text-sm text-muted-foreground">{item.description}</p>
-                    </motion.div>
+                      <h4 className="text-accent font-medium mb-1">{item.name}</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+                    </div>
                   ))}
                 </div>
               </motion.div>
@@ -509,26 +526,36 @@ const App = () => {
           </div>
         </motion.section>
 
+        {/* Contato */}
         <motion.section 
           id="contact" 
-          className="py-16 md:py-24 text-center"
+          className="py-16 md:py-32 w-full text-center relative"
           variants={fadeInUp}
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 gradient-text">Vamos Construir Algo Incrível?</h2>
-          <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
-            Se você busca um especialista em Engenharia de Dados para seu próximo projeto, entre em contato!
-          </p>
-          <div className="flex flex-col items-center gap-4 mt-8">
-            <div className="flex items-center gap-2">
-              <WhatsAppIcon className="text-accent" />
-              <span className="text-lg text-accent font-semibold">+55 11 99201-9057</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Mail className="w-6 h-6 text-accent" />
-              <span className="text-lg text-accent font-semibold">dev.gabrielrosattodantas@gmail.com</span>
+          <div className="absolute inset-0 bg-accent/5 blur-[100px] rounded-full max-w-3xl mx-auto pointer-events-none" />
+          
+          <div className="relative z-10 glassmorphism-card max-w-4xl mx-auto p-12 rounded-3xl border border-accent/20">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">Vamos Construir Algo Incrível?</h2>
+            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+              Seja para estruturar seus dados, automatizar rotinas ou criar um site espetacular, estou pronto para ajudar no seu próximo desafio.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <Button className="w-full gradient-bg text-white hover:opacity-90 px-8 py-6 text-lg rounded-xl flex items-center justify-center gap-3">
+                  <WhatsAppIcon className="w-6 h-6 text-white" />
+                  Falar no WhatsApp
+                </Button>
+              </a>
+              <a href={`mailto:${contactEmail}`} className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full border-white/20 text-foreground hover:bg-white/10 px-8 py-6 text-lg rounded-xl flex items-center justify-center gap-3">
+                  <Mail className="w-6 h-6 text-accent" />
+                  Enviar E-mail
+                </Button>
+              </a>
             </div>
           </div>
         </motion.section>
@@ -540,18 +567,20 @@ const App = () => {
           open={lightboxOpen}
           close={() => setLightboxOpen(false)}
           index={currentImageIndex}
-          slides={projects.flatMap(project => project.images.map(image => ({ 
-            src: image,
-            alt: project.title,
-            title: project.title
-          })))}
+          slides={projects
+            .flatMap(project => project.images)
+            .filter(Boolean)
+            .map(image => ({ src: image }))}
         />
       )}
 
-      <footer className="w-full py-8 border-t border-border/20">
-        <div className="container mx-auto text-center text-muted-foreground">
+      <footer className="w-full py-8 border-t border-white/5 bg-background mt-auto">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-muted-foreground text-sm">
           <p>&copy; {new Date().getFullYear()} Gabriel Rosatto Dantas. Todos os direitos reservados.</p>
-          <p className="text-sm mt-1">Desenvolvido com <span className="text-accent">React, TailwindCSS & Framer Motion</span></p>
+          <div className="flex items-center gap-2 mt-4 md:mt-0">
+            <span>Desenvolvido com</span>
+            <span className="text-accent font-medium">React, TailwindCSS & Framer Motion</span>
+          </div>
         </div>
       </footer>
     </div>

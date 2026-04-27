@@ -4,13 +4,13 @@
 
 @layer base {
 	:root {
-		--background: 240 10% 3.9%;
+		--background: 240 10% 4%;
 		--foreground: 0 0% 98%;
 
-		--card: 240 10% 7%;
+		--card: 240 10% 6%;
 		--card-foreground: 0 0% 98%;
 
-		--popover: 240 10% 3.9%;
+		--popover: 240 10% 4%;
 		--popover-foreground: 0 0% 98%;
 
 		--primary: 210 40% 98%;
@@ -19,30 +19,32 @@
 		--secondary: 220 10% 15%;
 		--secondary-foreground: 0 0% 98%;
 
-		--muted: 220 10% 25%;
-		--muted-foreground: 0 0% 60%;
+		--muted: 220 10% 20%;
+		--muted-foreground: 0 0% 70%;
 
-		--accent: 200 90% 60%;
+		--accent: 190 90% 50%; /* Vibrant Cyan */
 		--accent-foreground: 240 10% 3.9%;
+
+    --accent-secondary: 270 90% 65%; /* Vibrant Purple */
 
 		--destructive: 0 84.2% 60.2%;
 		--destructive-foreground: 0 0% 98%;
 
-		--border: 220 10% 20%;
-		--input: 220 10% 20%;
-		--ring: 200 90% 60%;
+		--border: 220 10% 15%;
+		--input: 220 10% 15%;
+		--ring: 190 90% 50%;
 
-		--radius: 0.5rem;
+		--radius: 0.75rem;
 	}
 
 	.dark {
-		--background: 240 10% 3.9%;
+		--background: 240 10% 4%;
 		--foreground: 0 0% 98%;
 
-		--card: 240 10% 7%;
+		--card: 240 10% 6%;
 		--card-foreground: 0 0% 98%;
 
-		--popover: 240 10% 3.9%;
+		--popover: 240 10% 4%;
 		--popover-foreground: 0 0% 98%;
 
 		--primary: 210 40% 98%;
@@ -51,18 +53,20 @@
 		--secondary: 220 10% 15%;
 		--secondary-foreground: 0 0% 98%;
 
-		--muted: 220 10% 25%;
-		--muted-foreground: 0 0% 60%;
+		--muted: 220 10% 20%;
+		--muted-foreground: 0 0% 70%;
 
-		--accent: 200 90% 60%;
+		--accent: 190 90% 50%;
 		--accent-foreground: 240 10% 3.9%;
+    
+    --accent-secondary: 270 90% 65%;
 
 		--destructive: 0 62.8% 30.6%;
 		--destructive-foreground: 0 0% 98%;
 
-		--border: 220 10% 20%;
-		--input: 220 10% 20%;
-		--ring: 200 90% 60%;
+		--border: 220 10% 15%;
+		--input: 220 10% 15%;
+		--ring: 190 90% 50%;
 	}
 }
 
@@ -73,21 +77,41 @@
 	body {
 		@apply bg-background text-foreground;
 		font-family: 'Inter', sans-serif;
+    /* Adicionando um leve brilho no fundo (background glow) */
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.05), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.05), transparent 25%);
 	}
 }
 
 .glassmorphism-card {
-  background: rgba(30, 30, 40, 0.6);
-  backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(20, 20, 30, 0.6);
+  backdrop-filter: blur(12px) saturate(200%);
+  -webkit-backdrop-filter: blur(12px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius);
+  transition: all 0.3s ease;
+}
+
+.glassmorphism-card:hover {
+  border-color: rgba(14, 165, 233, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.1);
+  transform: translateY(-5px);
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-400 via-white to-gray-400;
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(to right, hsl(var(--accent)), hsl(var(--accent-secondary)));
 }
 
 .subtle-accent-text {
   color: hsl(var(--accent));
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--accent-secondary)) 100%);
+}
+
+.glow-effect {
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
 }
